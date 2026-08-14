@@ -1,0 +1,2058 @@
+
+\documentclass[11pt,openany,oneside]{book}
+\usepackage[a4paper,top=25mm,bottom=27mm,left=28mm,right=28mm,headheight=16pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{multicol}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{makeidx}
+\makeindex
+
+\definecolor{ink}{HTML}{111827}
+\definecolor{slate}{HTML}{475569}
+\definecolor{muted}{HTML}{64748B}
+\definecolor{line}{HTML}{E2E8F0}
+\definecolor{paperblue}{HTML}{F8FAFC}
+\definecolor{teal}{HTML}{0F766E}
+\definecolor{tealbright}{HTML}{14B8A6}
+\definecolor{orange}{HTML}{C2410C}
+\definecolor{codebg}{HTML}{111827}
+\definecolor{codefg}{HTML}{E5E7EB}
+\definecolor{codecomment}{HTML}{94A3B8}
+\definecolor{codestring}{HTML}{A7F3D0}
+\definecolor{codekeyword}{HTML}{67E8F9}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=teal,
+  urlcolor=teal,
+  citecolor=teal,
+  pdftitle={Code, From Zero},
+  pdfauthor={Scott Brodie Forsyth},
+  pdfsubject={Programming syntax and computational thinking for beginners}
+}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=2pt,topsep=4pt,leftmargin=*}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*}
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+
+\titleformat{\part}[display]
+  {\sffamily\bfseries\color{ink}}
+  {\filleft\fontsize{44}{46}\selectfont\color{tealbright}\thepart}
+  {12pt}
+  {\filright\fontsize{30}{34}\selectfont}
+  [\vspace{8pt}\titlerule]
+\titleformat{\chapter}[display]
+  {\sffamily\bfseries\color{ink}}
+  {\filleft\fontsize{12}{14}\selectfont\color{teal}\MakeUppercase{Chapter \thechapter}}
+  {8pt}
+  {\filright\fontsize{27}{31}\selectfont}
+  [\vspace{6pt}\titlerule]
+\titleformat{\section}{\sffamily\Large\bfseries\color{ink}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\sffamily\large\bfseries\color{teal}}{\thesubsection}{0.7em}{}
+\titlespacing*{\part}{0pt}{0pt}{24pt}
+\titlespacing*{\chapter}{0pt}{0pt}{22pt}
+\titlespacing*{\section}{0pt}{22pt}{8pt}
+\titlespacing*{\subsection}{0pt}{14pt}{5pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\small\color{muted}\leftmark}
+\fancyhead[R]{\sffamily\small\color{muted}\rightmark}
+\fancyfoot[C]{\sffamily\small\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+
+\lstdefinestyle{bookcode}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small\color{codefg},
+  keywordstyle=\color{codekeyword}\bfseries,
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestring},
+  identifierstyle=\color{codefg},
+  numberstyle=\tiny\color{codecomment},
+  numbers=left,
+  numbersep=9pt,
+  frame=single,
+  framerule=0pt,
+  rulecolor=\color{codebg},
+  xleftmargin=19pt,
+  framexleftmargin=12pt,
+  xrightmargin=4pt,
+  framesep=8pt,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  keepspaces=true,
+  columns=fullflexible,
+  tabsize=4,
+  aboveskip=9pt,
+  belowskip=11pt
+}
+\lstdefinelanguage{JavaScript}{
+  keywords={break,case,catch,class,const,continue,debugger,default,delete,do,else,export,extends,finally,for,function,if,import,in,instanceof,let,new,return,switch, this, throw, try, typeof, var, void, while, with, yield, async, await, true, false, null, undefined},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]'
+}
+\lstdefinelanguage{TypeScript}{language=JavaScript,morekeywords={interface,public,private,protected,readonly,unknown,never,any,void,enum,implements,namespace,declare,as,keyof,type,of}}
+\lstdefinelanguage{HTML5}{language=HTML,morekeywords={doctype,html,head,body,main,section,article,header,footer,nav,script,link,meta}}
+\lstdefinelanguage{CSS3}{morekeywords={display,flex,grid,position,color,background,margin,padding,border,font-size,font-family,width,height,align-items,justify-content,gap,query,media}}
+\lstnewenvironment{code}[1][]{\lstset{style=bookcode,#1}}{}
+\newcommand{\inlinecode}[1]{\texttt{\small\detokenize{#1}}}
+
+\newtcolorbox{keybox}{enhanced,breakable,boxrule=0pt,frame hidden,colback=paperblue,coltext=ink,left=11pt,right=11pt,top=9pt,bottom=9pt,borderline west={3pt}{0pt}{tealbright},before skip=8pt,after skip=12pt}
+\newtcolorbox{warningbox}{enhanced,breakable,boxrule=0pt,frame hidden,colback=orange!6,coltext=ink,left=11pt,right=11pt,top=9pt,bottom=9pt,borderline west={3pt}{0pt}{orange},before skip=8pt,after skip=12pt}
+\newtcolorbox{exercisebox}{enhanced,breakable,boxrule=0.5pt,colframe=line,colback=white,coltext=ink,left=11pt,right=11pt,top=9pt,bottom=9pt,before skip=8pt,after skip=12pt}
+\newcommand{\keyidea}{\textsf{\bfseries\color{teal}Core idea.}\ }
+\newcommand{\syntax}{\textsf{\bfseries\color{orange}Syntax.}\ }
+\newcommand{\remember}{\textsf{\bfseries\color{teal}Remember.}\ }
+\newcommand{\tryit}{\textsf{\bfseries\color{orange}Try it.}\ }
+\newcommand{\term}[1]{\textbf{#1}\index{#1}}
+\newcommand{\blank}{\rule{1.5cm}{0.4pt}}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[ink] (current page.south west) rectangle (current page.north east);
+  \fill[teal] (current page.south west) rectangle ([xshift=13mm]current page.north west);
+  \fill[tealbright,opacity=.92] ([xshift=112mm,yshift=-20mm]current page.north west) rectangle ([xshift=184mm,yshift=-27mm]current page.north west);
+  \fill[orange,opacity=.86] ([xshift=132mm,yshift=-47mm]current page.north west) rectangle ([xshift=180mm,yshift=-52mm]current page.north west);
+  \draw[tealbright,line width=1.1pt,opacity=.8] ([xshift=116mm,yshift=-65mm]current page.north west) -- ([xshift=186mm,yshift=-65mm]current page.north west);
+  \draw[white,opacity=.16,line width=.5pt] ([xshift=26mm,yshift=42mm]current page.south west) -- ([xshift=186mm,yshift=42mm]current page.south west);
+  \draw[white,opacity=.12,line width=.5pt] ([xshift=26mm,yshift=34mm]current page.south west) -- ([xshift=160mm,yshift=34mm]current page.south west);
+  \draw[white,opacity=.08,line width=.5pt] ([xshift=26mm,yshift=26mm]current page.south west) -- ([xshift=177mm,yshift=26mm]current page.south west);
+\end{tikzpicture}
+\vspace*{52mm}
+{\color{tealbright}\sffamily\bfseries\small PROGRAMMING / SYNTAX / THINKING\par}
+\vspace{8mm}
+{\color{white}\sffamily\bfseries\fontsize{43}{47}\selectfont CODE,\par}
+{\color{white}\sffamily\bfseries\fontsize{43}{47}\selectfont FROM ZERO\par}
+\vspace{8mm}
+{\color{white!76}\sffamily\Large A clean, practical guide to learning the language of computers\par}
+\vfill
+{\color{white}\sffamily\large Scott Brodie Forsyth\par}
+\vspace{7mm}
+{\color{white!55}\sffamily\small First edition / 2026\par}
+\end{titlepage}
+
+\frontmatter
+
+\chapter*{A note to the reader}
+\addcontentsline{toc}{chapter}{A note to the reader}
+
+Programming can look like a wall of strange punctuation. It is not. Every program is built from a small number of ideas: values, names, decisions, repetition, functions, data structures, and communication between parts of a system. The difficult part is not memorising every symbol. The difficult part is learning how to combine simple pieces without losing track of what the computer is doing.
+
+This book starts with no assumed knowledge. It uses Python as the first language because its syntax is compact and readable, then compares the same ideas in JavaScript, TypeScript, SQL, HTML, CSS, C++, Java, Bash, and common data tools. The goal is not to pretend that one book can contain every library or every specialism. The goal is to give you a durable map of the field, enough syntax to read and write real code, and a path for going deeper.
+
+\begin{keybox}
+\keyidea This is a book about the grammar of code and the ideas behind it. Read the examples actively: predict the output, type the code yourself, change one thing, and observe what breaks.
+\end{keybox}
+
+\chapter*{How to use this book}
+\addcontentsline{toc}{chapter}{How to use this book}
+
+Each chapter has four layers:
+
+\begin{enumerate}
+  \item \textbf{The idea:} what problem a feature solves.
+  \item \textbf{The syntax:} the shapes you need to write.
+  \item \textbf{The mental model:} what the computer is doing.
+  \item \textbf{Practice:} small tasks that turn recognition into skill.
+\end{enumerate}
+
+Do not wait until you feel ready to code. A useful loop is:
+
+\begin{center}
+\sffamily\bfseries\color{teal}Read a little \quad $\rightarrow$ \quad Type it \quad $\rightarrow$ \quad Predict \quad $\rightarrow$ \quad Run \quad $\rightarrow$ \quad Change it \quad $\rightarrow$ \quad Explain it
+\end{center}
+
+When an example uses a terminal, the leading \inlinecode{\$} is a prompt, not part of the command. When an example uses Python, save it in a file ending in \inlinecode{.py}, or paste it into a Python interpreter.
+
+\chapter*{The map of programming}
+\addcontentsline{toc}{chapter}{The map of programming}
+
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\sffamily\bfseries\color{teal}}p{0.28\textwidth} >{\raggedright\arraybackslash}X}
+\toprule
+Area & What you build or study \\
+\midrule
+Programming languages & Syntax, types, functions, objects, compilers, interpreters \\
+Algorithms and data structures & Ways to store information and solve problems efficiently \\
+Web development & Pages, browsers, servers, APIs, databases, authentication \\
+Systems & Operating systems, memory, processes, networks, hardware \\
+Data and AI & Tables, statistics, numerical computing, machine learning \\
+Software engineering & Testing, version control, architecture, teamwork, deployment \\
+Security & Threats, permissions, safe input handling, cryptography, privacy \\
+\bottomrule
+\end{tabularx}
+
+The first half of this book gives you the shared foundation. The second half shows how that foundation branches into the fields above.
+
+\tableofcontents
+\mainmatter
+
+\part{The core language}
+
+\chapter{What programming actually is}
+
+\section{Instructions, data, and state}
+
+A program is a precise description of a process. It receives or creates data, transforms that data, and produces an effect: text on a screen, a saved file, a database update, a moving character, or a response sent over a network.
+
+The word \term{state} means the information that is true at a particular moment. If a game has a score of 12 and the player has three lives, that is part of the game's state. A line of code changes state by assigning a new value, adding an item, calling a function, or triggering an external action.
+
+\begin{keybox}
+\keyidea At the deepest level, programming is controlled change. You describe which state exists now, which operation should happen next, and what state should exist afterward.
+\end{keybox}
+
+\section{Syntax and semantics}
+
+\term{Syntax} is the grammar of a language: where parentheses, colons, quotes, commas, and indentation are allowed. \term{Semantics} is the meaning of a valid program. Two pieces of code can have different syntax but the same meaning.
+
+For example, these Python statements have equivalent results:
+
+\begin{code}[language=Python]
+total = 2 + 3
+\end{code}
+
+\begin{code}[language=Python]
+total = sum([2, 3])
+\end{code}
+
+The first is more direct. The second uses a function that can also sum a longer collection. Learning syntax is useful, but syntax is only the surface. The important question is always: what value does this expression produce, and what state does this statement change?
+
+\section{How code runs}
+
+There are three common ways a language reaches the computer:
+
+\begin{itemize}
+  \item An \term{interpreter} reads and executes code, often statement by statement.
+  \item A \term{compiler} translates source code into another form before it runs, often machine code.
+  \item A \term{virtual machine} runs an intermediate representation, such as Java bytecode.
+\end{itemize}
+
+The boundaries are not absolute. Modern languages often combine these approaches. Python first turns source into bytecode and then runs it on the Python virtual machine. JavaScript engines interpret, compile, optimise, and de-optimise code while a program is running.
+
+\section{Your first program}
+
+\begin{code}[language=Python]
+print("Hello, world!")
+\end{code}
+
+The name \inlinecode{print} refers to a function. The parentheses contain an argument. The text between quotation marks is a string literal. Running this statement produces visible output, but it does not change a variable in your program.
+
+\begin{code}[language=Python]
+name = "Ada"
+print("Hello, " + name + "!")
+\end{code}
+
+The second example stores a value under the name \inlinecode{name}, combines three strings with \inlinecode{+}, and sends the result to \inlinecode{print}.
+
+\begin{exercisebox}
+\tryit Change the name to your own name. Then add a second variable called \inlinecode{year} and print a sentence containing both values. Before running it, predict the exact output.
+\end{exercisebox}
+
+\section{A first debugging habit}
+
+When code does not work, do not stare at the whole program. Reduce the problem. Ask:
+
+\begin{enumerate}
+  \item What did I expect to happen?
+  \item What happened instead?
+  \item Which line first produces the wrong value?
+  \item What is the smallest test that isolates that line?
+\end{enumerate}
+
+This habit scales from a five-line exercise to a large production service.
+
+\chapter{Values, variables, and types}
+
+\section{Values are the pieces of information}
+
+A \term{value} is a piece of data. Common values include numbers, text, true-or-false values, collections, and the special value meaning "nothing." A \term{type} describes what kind of value something is and which operations make sense for it.
+
+\begin{code}[language=Python]
+age = 26                 # int: a whole number
+height = 1.96            # float: a decimal number
+name = "Scott"           # str: text
+student = True           # bool: True or False
+missing = None           # NoneType: no value
+\end{code}
+
+Python lets a name point to values of different types at different times:
+
+\begin{code}[language=Python]
+thing = 10
+thing = "ten"
+\end{code}
+
+This is called dynamic typing. It is flexible, but it means you must pay attention to what a name currently refers to. Other languages, such as Java and TypeScript, can require a variable to have a declared type.
+
+\section{Names and assignment}
+
+The equals sign in an assignment is not a mathematical claim that both sides are permanently equal. It means: evaluate the expression on the right, then bind the result to the name on the left.
+
+\begin{code}[language=Python]
+score = 10
+score = score + 5
+\end{code}
+
+The second line reads the old value 10, calculates 15, and then stores 15 under the same name. A shorter spelling is:
+
+\begin{code}[language=Python]
+score += 5
+\end{code}
+
+Good names communicate intent. Prefer \inlinecode{days_remaining} to \inlinecode{x} when the meaning matters. In Python, variables usually use \inlinecode{snake_case}; constants are often written in \inlinecode{UPPER_CASE}.
+
+\section{Converting between types}
+
+Input from a user arrives as text. Convert it before doing numeric work.
+
+\begin{code}[language=Python]
+age_text = "26"
+age = int(age_text)
+height = float("1.96")
+label = str(2026)
+\end{code}
+
+Not every conversion is valid. \inlinecode{int("hello")} raises an exception because the text does not describe a whole number.
+
+\section{Checking a type}
+
+Use \inlinecode{type} while learning or debugging. In ordinary application code, prefer asking whether a value supports the operation you need rather than building a long chain of type checks.
+
+\begin{code}[language=Python]
+value = 42
+print(type(value))
+print(isinstance(value, int))
+\end{code}
+
+\begin{keybox}
+\remember A variable is a name, not a box with a permanent type. Assignment makes the name refer to a value. The value has a type, and the type determines valid operations.
+\end{keybox}
+
+\chapter{Expressions and operators}
+
+\section{Expressions produce values}
+
+An \term{expression} is code that can be evaluated to a value. A literal such as \inlinecode{7} is an expression. So are \inlinecode{2 + 3}, a function call, and a variable name.
+
+\begin{code}[language=Python]
+price = 12.50
+quantity = 3
+subtotal = price * quantity
+\end{code}
+
+An expression can be nested inside another expression:
+
+\begin{code}[language=Python]
+total = (price * quantity) * 1.25
+\end{code}
+
+\section{Arithmetic}
+
+\begin{tabularx}{\textwidth}{>{\ttfamily}p{0.18\textwidth} X}
+\toprule
+Operator & Meaning \\
+\midrule
+\inlinecode{+} & addition \\
+\inlinecode{-} & subtraction \\
+\inlinecode{*} & multiplication \\
+\inlinecode{/} & division, producing a float in Python \\
+\inlinecode{//} & floor division \\
+\inlinecode{\%} & remainder, or modulo \\
+\inlinecode{**} & exponentiation \\
+\bottomrule
+\end{tabularx}
+
+\begin{code}[language=Python]
+print(7 / 2)     # 3.5
+print(7 // 2)    # 3
+print(7 % 2)     # 1
+print(2 ** 3)    # 8
+\end{code}
+
+Use parentheses when they make precedence clear. Even when you know the operator rules, explicit grouping helps the next reader.
+
+\section{Comparison and Boolean logic}
+
+Comparisons produce Boolean values:
+
+\begin{code}[language=Python]
+age = 26
+print(age >= 18)       # True
+print(age == 26)       # True
+print(age != 30)       # True
+\end{code}
+
+The single equals sign assigns. The double equals sign compares. Mixing them up is one of the first common errors.
+
+Combine conditions with \inlinecode{and}, \inlinecode{or}, and \inlinecode{not}:
+
+\begin{code}[language=Python]
+has_ticket = True
+is_old_enough = True
+allowed = has_ticket and is_old_enough
+\end{code}
+
+Python uses \term{short-circuit evaluation}: in \inlinecode{a and b}, if \inlinecode{a} is false, Python does not need to evaluate \inlinecode{b}; in \inlinecode{a or b}, a true \inlinecode{a} is enough.
+
+\section{Truthiness}
+
+Some values behave like false in a condition: \inlinecode{False}, \inlinecode{None}, zero, and empty collections. Most other values behave like true.
+
+\begin{code}[language=Python]
+items = []
+if not items:
+    print("The list is empty")
+\end{code}
+
+Use this feature when it makes code clearer. If the distinction between "empty" and "missing" matters, compare explicitly with \inlinecode{is None} or \inlinecode{== []}.
+
+\begin{exercisebox}
+\tryit Write an expression that is true only when a number is between 10 and 20 inclusive. Test it with 9, 10, 15, 20, and 21.
+\end{exercisebox}
+
+\chapter{Strings, input, and output}
+
+\section{Strings are sequences of characters}
+
+Strings can use single or double quotes. Use the style that makes the inside text easiest to read.
+
+\begin{code}[language=Python]
+single = 'hello'
+double = "hello"
+quote = "She said, 'run the code.'"
+\end{code}
+
+Special characters use escape sequences:
+
+\begin{code}[language=Python]
+line = "first line\nsecond line"
+path = "C:\\Users\\Ada"
+\end{code}
+
+\section{Formatting text}
+
+F-strings are the most readable general-purpose formatting tool in Python.
+
+\begin{code}[language=Python]
+name = "Ada"
+score = 97.5
+message = f"{name} scored {score:.1f}%"
+print(message)
+\end{code}
+
+The expression inside braces is evaluated. The format specifier \inlinecode{:.1f} means one digit after the decimal point.
+
+\section{Useful string methods}
+
+\begin{code}[language=Python]
+text = "  Learn Python  "
+clean = text.strip()
+lower = clean.lower()
+words = clean.split()
+joined = "-".join(words)
+print(clean, lower, words, joined)
+\end{code}
+
+Methods return new strings because strings are immutable: an existing string is not changed in place.
+
+\section{Input}
+
+\begin{code}[language=Python]
+name = input("What is your name? ")
+age = int(input("How old are you? "))
+print(f"Hello {name}. Next year you will be {age + 1}.")
+\end{code}
+
+Treat user input as untrusted text. It may be empty, malformed, unexpectedly long, or deliberately hostile. Validation belongs between receiving input and using it.
+
+\begin{code}[language=Python]
+raw = input("Enter a positive whole number: ")
+if raw.isdigit() and int(raw) > 0:
+    number = int(raw)
+    print(number * 2)
+else:
+    print("That was not a positive whole number.")
+\end{code}
+
+\chapter{Collections: lists, tuples, sets, and dictionaries}
+
+\section{Lists}
+
+A list is an ordered, mutable collection. Indexing starts at zero.
+
+\begin{code}[language=Python]
+tools = ["editor", "terminal", "browser"]
+print(tools[0])
+print(tools[-1])
+tools.append("interpreter")
+tools[1] = "git"
+\end{code}
+
+Slicing makes a new list. The end index is excluded.
+
+\begin{code}[language=Python]
+numbers = [0, 1, 2, 3, 4, 5]
+print(numbers[1:4])  # [1, 2, 3]
+print(numbers[:3])   # [0, 1, 2]
+print(numbers[3:])   # [3, 4, 5]
+\end{code}
+
+\section{Tuples and sets}
+
+A tuple is an ordered collection that is commonly used for a fixed group of values. A set stores unique values and is useful for membership tests.
+
+\begin{code}[language=Python]
+point = (3, 4)
+x, y = point
+
+tags = {"python", "code", "python"}
+print(tags)                 # duplicate removed
+print("code" in tags)       # True
+\end{code}
+
+Sets do not promise a meaningful order. Do not rely on the order in which a set prints.
+
+\section{Dictionaries}
+
+A dictionary maps keys to values. It is the natural representation for a record with named fields.
+
+\begin{code}[language=Python]
+user = {
+    "name": "Ada",
+    "age": 36,
+    "skills": ["math", "programming"],
+}
+
+print(user["name"])
+user["age"] += 1
+user["active"] = True
+\end{code}
+
+Use \inlinecode{get} when a key may be absent:
+
+\begin{code}[language=Python]
+country = user.get("country", "unknown")
+\end{code}
+
+\section{Comprehensions}
+
+A comprehension creates a collection from another iterable with an optional condition.
+
+\begin{code}[language=Python]
+squares = [n * n for n in range(6)]
+even_squares = [n * n for n in range(10) if n % 2 == 0]
+lengths = {word: len(word) for word in ["code", "data"]}
+\end{code}
+
+Comprehensions are concise, not magical. If a comprehension becomes difficult to read, write an ordinary loop.
+
+\begin{exercisebox}
+\tryit Create a list of the lengths of all words longer than four characters in a sentence. Then create a dictionary mapping each word to its length.
+\end{exercisebox}
+
+\chapter{Control flow}
+
+\section{Conditions}
+
+An \inlinecode{if} statement chooses which block should run. Python uses indentation to mark a block.
+
+\begin{code}[language=Python]
+temperature = 18
+
+if temperature < 0:
+    advice = "Wear a heavy coat."
+elif temperature < 15:
+    advice = "Wear a jacket."
+else:
+    advice = "A light layer should be fine."
+
+print(advice)
+\end{code}
+
+The colon begins a block. Every line in the block must be indented consistently. Four spaces is the usual convention.
+
+\section{For loops}
+
+Use a \inlinecode{for} loop to visit each item in an iterable.
+
+\begin{code}[language=Python]
+names = ["Ada", "Grace", "Alan"]
+for name in names:
+    print(f"Hello, {name}!")
+\end{code}
+
+Use \inlinecode{range} when you need a sequence of integers. The stop value is excluded.
+
+\begin{code}[language=Python]
+for number in range(1, 6):
+    print(number)
+\end{code}
+
+\section{While loops}
+
+A \inlinecode{while} loop repeats while a condition remains true. You must change something that can eventually make the condition false.
+
+\begin{code}[language=Python]
+attempts = 0
+while attempts < 3:
+    print("Trying...")
+    attempts += 1
+\end{code}
+
+An accidental infinite loop is usually caused by forgetting the update or by updating the wrong variable.
+
+\section{Break, continue, and enumerate}
+
+\begin{code}[language=Python]
+for index, name in enumerate(names, start=1):
+    if name == "Grace":
+        continue
+    print(index, name)
+\end{code}
+
+\inlinecode{continue} skips to the next iteration. \inlinecode{break} exits the loop. Use both sparingly: a clear condition is often easier to understand than deeply nested control flow.
+
+\section{Matching patterns}
+
+Modern Python includes \inlinecode{match} for selecting among structural patterns.
+
+\begin{code}[language=Python]
+command = ("move", 3)
+
+match command:
+    case ("move", distance):
+        print(f"Move {distance} spaces")
+    case ("stop",):
+        print("Stop")
+    case _:
+        print("Unknown command")
+\end{code}
+
+The underscore is a catch-all pattern. An ordinary \inlinecode{if}/\inlinecode{elif} chain is still perfectly appropriate for simple conditions.
+
+\chapter{Functions, scope, and modules}
+
+\section{Functions name a process}
+
+A function packages a process behind a name. It accepts inputs and may return an output.
+
+\begin{code}[language=Python]
+def greet(name):
+    return f"Hello, {name}!"
+
+message = greet("Ada")
+print(message)
+\end{code}
+
+\inlinecode{return} immediately leaves the function. A function with no explicit return gives back \inlinecode{None}.
+
+\section{Parameters and arguments}
+
+Parameters are names in the function definition. Arguments are the values supplied at the call site.
+
+\begin{code}[language=Python]
+def total_price(price, quantity=1, tax_rate=0.25):
+    subtotal = price * quantity
+    return subtotal * (1 + tax_rate)
+
+print(total_price(10, quantity=3))
+\end{code}
+
+Keyword arguments improve clarity. Avoid mutable default arguments such as \inlinecode{items=[]}; that list would be shared between calls. Use \inlinecode{None} and create a new list inside instead.
+
+\section{Flexible arguments}
+
+\begin{code}[language=Python]
+def maximum(*numbers):
+    if not numbers:
+        raise ValueError("at least one number is required")
+    return max(numbers)
+
+settings = {"sep": " | ", "end": "\n"}
+print("a", "b", **settings)
+\end{code}
+
+The star gathers extra positional arguments into a tuple. Two stars gather extra keyword arguments into a dictionary.
+
+\section{Scope}
+
+A local variable exists inside the function that creates it. A global variable exists at module level. Prefer passing values into functions and returning values out. This makes the function easier to test and prevents hidden dependencies.
+
+\begin{code}[language=Python]
+def add_tax(price, rate):
+    return price * (1 + rate)
+
+price = add_tax(100, 0.25)
+\end{code}
+
+\section{Modules and imports}
+
+Every Python file is a module. Import a module to reuse its definitions.
+
+\begin{code}[language=Python]
+import math
+from pathlib import Path
+
+print(math.sqrt(25))
+print(Path("notes.txt").suffix)
+\end{code}
+
+When a file is run directly, \inlinecode{__name__} is \inlinecode{"__main__"}. This pattern lets a file be both imported and run as a script.
+
+\begin{code}[language=Python]
+def main():
+    print("Program started")
+
+if __name__ == "__main__":
+    main()
+\end{code}
+
+\chapter{Errors, debugging, and testing}
+
+\section{Three kinds of errors}
+
+\begin{itemize}
+  \item A \term{syntax error} means the code is not valid in the language.
+  \item A \term{runtime error} happens while valid code is running, such as dividing by zero.
+  \item A \term{logic error} produces the wrong result without crashing.
+\end{itemize}
+
+The traceback is a map of the calls that led to the error. Read the last line first for the error type and message, then move upward to find your own code.
+
+\section{Handling exceptions}
+
+\begin{code}[language=Python]
+try:
+    number = int(input("Number: "))
+    result = 100 / number
+except ValueError:
+    print("Please enter a whole number.")
+except ZeroDivisionError:
+    print("The number cannot be zero.")
+else:
+    print(result)
+finally:
+    print("This always runs.")
+\end{code}
+
+Catch specific exceptions. A bare \inlinecode{except:} can hide programming defects and make debugging harder.
+
+\section{Raising errors}
+
+\begin{code}[language=Python]
+def withdraw(balance, amount):
+    if amount < 0:
+        raise ValueError("amount cannot be negative")
+    if amount > balance:
+        raise ValueError("insufficient balance")
+    return balance - amount
+\end{code}
+
+An exception is a controlled way to say that a function cannot fulfil its contract. The caller can decide how to present or recover from the failure.
+
+\section{Assertions and tests}
+
+An assertion documents an assumption during development.
+
+\begin{code}[language=Python]
+def double(number):
+    return number * 2
+
+assert double(4) == 8
+assert double(-2) == -4
+\end{code}
+
+A proper test names the behaviour being checked:
+
+\begin{code}[language=Python]
+def test_double_handles_zero():
+    assert double(0) == 0
+
+def test_withdraw_reduces_balance():
+    assert withdraw(100, 25) == 75
+\end{code}
+
+Whether you use Python's built-in \inlinecode{unittest} or a tool such as pytest, tests are executable examples of intended behaviour.
+
+\section{A practical debugging loop}
+
+Write a small input that demonstrates the problem. Print or inspect intermediate values. Check types and lengths. Replace a large expression with named steps. Then keep the smallest failing example as a regression test.
+
+\chapter{Files, paths, and data formats}
+
+\section{Reading and writing text}
+
+Use a context manager so the file is closed even if an error occurs.
+
+\begin{code}[language=Python]
+from pathlib import Path
+
+path = Path("notes.txt")
+path.write_text("First note\nSecond note\n", encoding="utf-8")
+text = path.read_text(encoding="utf-8")
+print(text)
+\end{code}
+
+For larger files, process one line at a time:
+
+\begin{code}[language=Python]
+with open("notes.txt", encoding="utf-8") as file:
+    for line in file:
+        print(line.strip())
+\end{code}
+
+\section{JSON}
+
+JSON represents objects, arrays, strings, numbers, booleans, and null. It is common at API boundaries.
+
+\begin{code}[language=Python]
+import json
+
+record = {"name": "Ada", "active": True, "scores": [10, 12]}
+text = json.dumps(record, indent=2)
+loaded = json.loads(text)
+print(loaded["scores"])
+\end{code}
+
+\section{CSV}
+
+CSV looks simple but can contain quoted commas, missing values, and different line endings. Use the standard library rather than splitting on commas yourself.
+
+\begin{code}[language=Python]
+import csv
+
+with open("people.csv", newline="", encoding="utf-8") as file:
+    for row in csv.DictReader(file):
+        print(row["name"], row["age"])
+\end{code}
+
+\section{Paths and directories}
+
+Build paths with \inlinecode{Path}, not by manually joining strings. A path is not the same thing as the contents of a file; it is a location.
+
+\begin{code}[language=Python]
+from pathlib import Path
+
+data_dir = Path("data")
+data_dir.mkdir(exist_ok=True)
+for path in data_dir.glob("*.json"):
+    print(path.name)
+\end{code}
+
+\begin{warningbox}
+\syntax Never build a shell command by inserting raw user input into a string. Validate paths and use safe process APIs. This principle becomes critical when programs handle uploads, filenames, or database queries.
+\end{warningbox}
+
+\chapter{Objects and classes}
+
+\section{Objects bundle data and behaviour}
+
+An object combines state with operations that know how to work on that state. A class is a description used to create objects.
+
+\begin{code}[language=Python]
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        if amount <= 0:
+            raise ValueError("amount must be positive")
+        self.balance += amount
+
+    def summary(self):
+        return f"{self.owner}: {self.balance:.2f}"
+
+account = BankAccount("Ada", 100)
+account.deposit(25)
+print(account.summary())
+\end{code}
+
+\inlinecode{self} refers to the particular object receiving the method call. The constructor \inlinecode{__init__} runs when a new object is created.
+
+\section{Encapsulation and invariants}
+
+An \term{invariant} is a rule that should remain true, such as a bank balance not being allowed to become negative. Put the rule close to the state it protects. Public methods can reject invalid changes.
+
+Python does not enforce private fields strongly, but a leading underscore communicates "internal use." In languages with access modifiers, fields can be declared private and exposed through methods or properties.
+
+\section{Inheritance and composition}
+
+Inheritance expresses an "is a" relationship. Composition expresses a "has a" relationship. Prefer composition when it avoids a brittle hierarchy.
+
+\begin{code}[language=Python]
+class EmailSender:
+    def send(self, message):
+        print(f"Sending email: {message}")
+
+class NotificationService:
+    def __init__(self, sender):
+        self.sender = sender
+
+    def notify(self, message):
+        self.sender.send(message)
+
+service = NotificationService(EmailSender())
+service.notify("Build finished")
+\end{code}
+
+The service depends on an object with a \inlinecode{send} operation. That dependency can later be replaced with a fake sender in a test.
+
+\section{Dataclasses}
+
+Use a dataclass when the main purpose of a class is to hold data.
+
+\begin{code}[language=Python]
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: float
+    y: float
+
+point = Point(3, 4)
+print(point)
+\end{code}
+
+\section{Type hints}
+
+Type hints document expectations and enable static analysis. Python does not normally enforce them at runtime.
+
+\begin{code}[language=Python]
+def average(values: list[float]) -> float:
+    return sum(values) / len(values)
+\end{code}
+
+Hints are communication. They become especially valuable as a project grows or multiple people work on it.
+
+\chapter{Data structures and algorithms}
+
+\section{Choosing a structure}
+
+The right structure depends on the operation you need most often.
+
+\begin{tabularx}{\textwidth}{>{\sffamily\bfseries\color{teal}}p{0.26\textwidth} X}
+\toprule
+Need & Typical choice \\
+\midrule
+Ordered items, append at end & list / array \\
+Fast membership and uniqueness & set / hash set \\
+Named fields & dictionary / map / object \\
+First-in, first-out work & queue \\
+Last-in, first-out work & stack \\
+Relationships between nodes & graph \\
+Hierarchical relationships & tree \\
+\bottomrule
+\end{tabularx}
+
+\section{Complexity intuition}
+
+\term{Time complexity} describes how the amount of work grows as input size \inlinecode{n} grows. Common categories are:
+
+\begin{itemize}
+  \item $O(1)$: constant time; the size of the input does not change the basic work.
+  \item $O(\log n)$: logarithmic; each step discards a large part of the search space.
+  \item $O(n)$: linear; visit each item once.
+  \item $O(n \log n)$: common for efficient comparison sorting.
+  \item $O(n^2)$: quadratic; compare many pairs or nest two full loops.
+\end{itemize}
+
+Big-O ignores constants and focuses on growth. It is a model, not a stopwatch.
+
+\section{Searching and sorting}
+
+Linear search is simple:
+
+\begin{code}[language=Python]
+def find_index(items, target):
+    for index, item in enumerate(items):
+        if item == target:
+            return index
+    return -1
+\end{code}
+
+If a list is sorted, binary search can repeatedly halve the remaining range. Python provides \inlinecode{bisect}; do not implement a clever search until the simpler version is understood and measured.
+
+Sorting with a key function is a powerful pattern:
+
+\begin{code}[language=Python]
+people = [
+    {"name": "Ada", "age": 36},
+    {"name": "Alan", "age": 41},
+]
+ordered = sorted(people, key=lambda person: person["age"])
+\end{code}
+
+\section{Recursion}
+
+A recursive function calls itself on a smaller problem and needs a base case.
+
+\begin{code}[language=Python]
+def factorial(n):
+    if n < 0:
+        raise ValueError("n must be non-negative")
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)
+\end{code}
+
+Recursion is elegant for trees and divide-and-conquer algorithms. Iteration is often more memory-efficient for simple counting tasks.
+
+\section{Graphs}
+
+Represent a small graph with an adjacency dictionary:
+
+\begin{code}[language=Python]
+graph = {
+    "A": ["B", "C"],
+    "B": ["D"],
+    "C": ["D"],
+    "D": [],
+}
+\end{code}
+
+Breadth-first search uses a queue. Depth-first search uses a stack or recursion. These patterns appear in route finding, dependency resolution, web crawling, and game search.
+
+\chapter{The terminal, environments, and Git}
+
+\section{The command line}
+
+A terminal lets you interact with the operating system by typing commands. The exact commands differ slightly between operating systems, but the underlying concepts are shared.
+
+\begin{code}[language=bash]
+pwd                 # show the current directory
+ls                  # list files on macOS/Linux
+cd project          # move into a directory
+mkdir src           # create a directory
+python --version    # show the Python version
+\end{code}
+
+On Windows PowerShell, \inlinecode{Get-ChildItem} is the long form of \inlinecode{ls}, but many common aliases work. The shell runs programs, connects them with pipes, redirects output, and exposes environment variables.
+
+\begin{code}[language=bash]
+python app.py > output.txt
+cat output.txt | grep error
+\end{code}
+
+\section{Virtual environments}
+
+A project should not rely on a random global set of packages.
+
+\begin{code}[language=bash]
+python -m venv .venv
+source .venv/bin/activate       # macOS/Linux
+.venv\Scripts\activate          # Windows PowerShell
+python -m pip install requests
+python -m pip freeze > requirements.txt
+\end{code}
+
+Keep the environment directory out of version control. Record the dependencies that another person needs to recreate the environment.
+
+\section{Git's mental model}
+
+Git records snapshots of a project. The working tree contains current files. The staging area is a proposed next snapshot. A commit is a named snapshot in history. A branch is a movable label pointing to a line of commits.
+
+\begin{code}[language=bash]
+git init
+git status
+git add .
+git commit -m "Add first program"
+git log --oneline
+git switch -c feature/cli
+\end{code}
+
+Commit small coherent changes. A good commit message says what changed, not how long you worked.
+
+\begin{keybox}
+\remember Version control is not only a backup. It is a communication system, an experiment log, and a way to make changes reversible.
+\end{keybox}
+
+\part{The programming landscape}
+
+\chapter{HTML: the structure of the web}
+
+\section{Documents and elements}
+
+HTML describes the structure and meaning of a document. It is not primarily a programming language; it is a markup language. An element usually has an opening tag, content, and a closing tag.
+
+\begin{code}[language=HTML5]
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My first page</title>
+  </head>
+  <body>
+    <main>
+      <h1>Learn by making things</h1>
+      <p>HTML gives the page structure.</p>
+      <a href="https://example.com">Visit a site</a>
+    </main>
+  </body>
+</html>
+\end{code}
+
+Use semantic elements such as \inlinecode{main}, \inlinecode{nav}, \inlinecode{article}, and \inlinecode{footer}. A \term{class} is a reusable styling hook. An \term{id} identifies one element and can be a target for links or scripts.
+
+\section{Forms}
+
+\begin{code}[language=HTML5]
+<form action="/search" method="get">
+  <label for="query">Search</label>
+  <input id="query" name="q" type="search" required>
+  <button type="submit">Search</button>
+</form>
+\end{code}
+
+The \inlinecode{name} attribute is the key sent to the server. The label improves accessibility and makes the input easier to use.
+
+\section{Accessibility basics}
+
+Use headings in order, provide alternative text for meaningful images, label form controls, use buttons for actions, and do not communicate important information by colour alone. Semantic HTML helps browsers, search engines, assistive technologies, and future developers.
+
+\chapter{CSS: styling and layout}
+
+\section{Selectors and declarations}
+
+CSS applies declarations to selected elements. A declaration has a property and a value.
+
+\begin{code}[language=CSS3]
+:root {
+  --ink: #111827;
+  --accent: #0f766e;
+}
+
+body {
+  color: var(--ink);
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+}
+\end{code}
+
+The dot selects a class. A hash selects an id. A bare element name selects all elements of that type. CSS has a cascade: more specific or later rules can override earlier rules.
+
+\section{The box model}
+
+Every element has content, padding, border, and margin. A reliable default is:
+
+\begin{code}[language=CSS3]
+* {
+  box-sizing: border-box;
+}
+\end{code}
+
+This makes declared width include padding and border, which is usually easier to reason about.
+
+\section{Flexbox and grid}
+
+Flexbox is useful for laying items along one dimension. Grid is useful for rows and columns.
+
+\begin{code}[language=CSS3]
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
+}
+\end{code}
+
+Start with normal document flow. Add positioning only when you can explain which containing block the element uses.
+
+\chapter{JavaScript: behaviour in the browser}
+
+\section{Variables and values}
+
+JavaScript has primitive values such as strings, numbers, booleans, \inlinecode{null}, and \inlinecode{undefined}, plus objects such as arrays and dictionaries.
+
+\begin{code}[language=JavaScript]
+const name = "Ada";
+let count = 0;
+count += 1;
+
+const skills = ["math", "code"];
+const user = { name, skills, active: true };
+console.log(user.name);
+\end{code}
+
+Prefer \inlinecode{const} by default. Use \inlinecode{let} when a binding must change. Avoid \inlinecode{var} in new code.
+
+\section{Functions and conditions}
+
+\begin{code}[language=JavaScript]
+function greet(person) {
+  return `Hello, ${person}!`;
+}
+
+const isAdult = age => age >= 18;
+
+if (isAdult(26)) {
+  console.log(greet("Ada"));
+} else {
+  console.log("Not an adult");
+}
+\end{code}
+
+Arrow functions capture the surrounding \inlinecode{this} value differently from ordinary functions. Learn the distinction before using methods that depend on \inlinecode{this}.
+
+\section{Arrays and objects}
+
+\begin{code}[language=JavaScript]
+const numbers = [1, 2, 3, 4];
+const squares = numbers.map(number => number * number);
+const even = numbers.filter(number => number % 2 === 0);
+const total = numbers.reduce((sum, number) => sum + number, 0);
+\end{code}
+
+The triple equals operator compares without the coercion rules of \inlinecode{==}. In modern code, use \inlinecode{===} and \inlinecode{!==} unless you have a specific reason not to.
+
+\section{The DOM and events}
+
+\begin{code}[language=JavaScript]
+const button = document.querySelector("#save");
+const output = document.querySelector("#output");
+
+button.addEventListener("click", () => {
+  output.textContent = "Saved";
+});
+\end{code}
+
+The browser exposes the document as an object tree. An event listener runs a function later when an event occurs. This is the beginning of event-driven programming.
+
+\chapter{TypeScript: JavaScript with a type system}
+
+\section{Annotations and inference}
+
+TypeScript adds static types and then compiles to JavaScript.
+
+\begin{code}[language=TypeScript]
+let count: number = 0;
+const name: string = "Ada";
+const active: boolean = true;
+
+function greet(person: string): string {
+  return `Hello, ${person}!`;
+}
+\end{code}
+
+TypeScript often infers obvious types. Do not annotate every local variable just to make the file noisy. Add types at boundaries: function parameters, return values, API data, and public interfaces.
+
+\section{Objects, interfaces, and unions}
+
+\begin{code}[language=TypeScript]
+interface User {
+  id: number;
+  name: string;
+  role?: "admin" | "member";
+}
+
+function label(user: User): string {
+  const role = user.role ?? "member";
+  return `${user.name} (${role})`;
+}
+\end{code}
+
+The question mark makes a property optional. The vertical bar creates a union: the value must be one of the allowed alternatives.
+
+\section{Generics}
+
+Generics let a function preserve the relationship between its input and output.
+
+\begin{code}[language=TypeScript]
+function first<T>(items: T[]): T | undefined {
+  return items[0];
+}
+
+const firstName = first(["Ada", "Grace"]);
+const firstNumber = first([10, 20]);
+\end{code}
+
+\section{Narrowing}
+
+\begin{code}[language=TypeScript]
+function format(value: string | number): string {
+  if (typeof value === "number") {
+    return value.toFixed(2);
+  }
+  return value.toUpperCase();
+}
+\end{code}
+
+The compiler narrows the union after the condition. A type assertion such as \inlinecode{value as User} tells the compiler to trust you; use it only when you can justify it.
+
+\chapter{SQL and databases}
+
+\section{Tables and relationships}
+
+A relational database stores rows in tables. A row is one record. A column is an attribute. A primary key identifies a row. A foreign key connects a row to another table.
+
+\begin{code}[language=SQL]
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE posts (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    title TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
+\end{code}
+
+\section{Selecting data}
+
+\begin{code}[language=SQL]
+SELECT name, email
+FROM users
+WHERE email LIKE '%example.com'
+ORDER BY name ASC;
+\end{code}
+
+The order is conceptually \inlinecode{FROM}, \inlinecode{WHERE}, \inlinecode{SELECT}, and \inlinecode{ORDER BY}, although the written syntax has a different order. SQL describes what result you want; the database chooses a plan to obtain it.
+
+\section{Inserting and updating}
+
+\begin{code}[language=SQL]
+INSERT INTO users (name, email)
+VALUES ('Ada', 'ada@example.com');
+
+UPDATE users
+SET name = 'Ada Lovelace'
+WHERE email = 'ada@example.com';
+\end{code}
+
+The \inlinecode{WHERE} clause is essential for safe updates. Without it, every row may be modified.
+
+\section{Joins and aggregation}
+
+\begin{code}[language=SQL]
+SELECT users.name, COUNT(posts.id) AS post_count
+FROM users
+LEFT JOIN posts ON posts.user_id = users.id
+GROUP BY users.id, users.name
+HAVING COUNT(posts.id) > 0
+ORDER BY post_count DESC;
+\end{code}
+
+\term{Joins} combine related tables. \term{Aggregation} reduces many rows to summaries. A \inlinecode{LEFT JOIN} keeps users even when they have no posts; an inner \inlinecode{JOIN} would discard those users.
+
+\section{Parameterized queries}
+
+Never build SQL by concatenating user input. Use parameters supplied by your database driver.
+
+\begin{code}[language=Python]
+cursor.execute(
+    "SELECT id, name FROM users WHERE email = ?",
+    (email,)
+)
+\end{code}
+
+The placeholder syntax differs by driver. The principle is the same: keep code and data separate.
+
+\chapter{HTTP, APIs, JSON, and asynchronous code}
+
+\section{Requests and responses}
+
+HTTP is a request-response protocol. A request has a method, URL, headers, and sometimes a body. A response has a status code, headers, and a body.
+
+\begin{tabularx}{\textwidth}{>{\ttfamily}p{0.18\textwidth} X}
+\toprule
+Method & Common meaning \\
+\midrule
+GET & Read a resource \\
+POST & Create or trigger an action \\
+PUT / PATCH & Replace or partially update a resource \\
+DELETE & Remove a resource \\
+\bottomrule
+\end{tabularx}
+
+Status codes communicate broad outcomes: 2xx success, 3xx redirection, 4xx client-side problem, and 5xx server-side problem.
+
+\section{A JSON API client}
+
+\begin{code}[language=Python]
+import requests
+
+response = requests.get(
+    "https://api.example.com/users",
+    timeout=10,
+)
+response.raise_for_status()
+data = response.json()
+for user in data["users"]:
+    print(user["name"])
+\end{code}
+
+Set a timeout. Check the status. Treat the response shape as external data and validate it before trusting nested keys.
+
+\section{Async and await}
+
+Asynchronous code lets a program start an operation that may take time, such as a network request, while allowing other work to progress.
+
+\begin{code}[language=Python]
+import asyncio
+
+async def fetch_value(delay, value):
+    await asyncio.sleep(delay)
+    return value
+
+async def main():
+    first, second = await asyncio.gather(
+        fetch_value(1, "A"),
+        fetch_value(1, "B"),
+    )
+    print(first, second)
+
+asyncio.run(main())
+\end{code}
+
+\inlinecode{await} pauses the current coroutine until an awaitable completes. It does not automatically make CPU-heavy work faster. Async code is most useful when the program spends time waiting for external operations.
+
+\section{Promises in JavaScript}
+
+\begin{code}[language=JavaScript]
+async function loadUsers() {
+  const response = await fetch("/api/users");
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json();
+}
+
+loadUsers()
+  .then(users => console.log(users))
+  .catch(error => console.error(error));
+\end{code}
+
+An async function returns a promise. Handle failure explicitly; a network request can fail even when the code is correct.
+
+\chapter{Backend programming}
+
+\section{The server's job}
+
+A backend receives requests, authenticates and validates them, applies business rules, reads or writes data, and returns a response. A framework supplies routing, middleware, serialization, and integration points.
+
+\begin{code}[language=Python]
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/hello")
+def hello(name: str = "world"):
+    return {"message": f"Hello, {name}!"}
+\end{code}
+
+The decorator registers a route. The function is the handler. The returned dictionary is serialized to JSON by the framework.
+
+\section{Layers}
+
+A small application can be divided into:
+
+\begin{enumerate}
+  \item Transport: HTTP, routing, headers, status codes.
+  \item Application: use cases and orchestration.
+  \item Domain: rules and concepts that matter to the product.
+  \item Persistence: SQL, files, caches, external services.
+\end{enumerate}
+
+The point is not to create folders for their own sake. The point is to keep changes local and make dependencies visible.
+
+\section{Authentication and authorization}
+
+Authentication asks "who are you?" Authorization asks "what are you allowed to do?" Check both on the server. Never trust a role or user id supplied by the browser merely because the interface hides a button.
+
+\section{Validation}
+
+Validate at boundaries. Reject invalid data early with a useful error. Keep internal functions simpler by giving them well-formed values. Make validation rules explicit and test them.
+
+\chapter{C and C++: closer to the machine}
+
+\section{A small C++ program}
+
+\begin{code}[language=C++]
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string name = "Ada";
+    std::cout << "Hello, " << name << "!\n";
+    return 0;
+}
+\end{code}
+
+The preprocessor includes declarations. The compiler checks and translates the source. The linker combines compiled pieces into an executable. C++ uses static types and gives you direct control over memory and object lifetimes.
+
+\section{References and pointers}
+
+A pointer stores an address. A reference is another name for an existing object.
+
+\begin{code}[language=C++]
+void add_one(int& value) {
+    value += 1;
+}
+
+int number = 4;
+add_one(number);
+\end{code}
+
+The ampersand in a parameter makes \inlinecode{value} a reference, so the function changes the caller's variable. Modern C++ often uses standard library containers and smart pointers rather than manual memory management.
+
+\section{Vectors, maps, and loops}
+
+\begin{code}[language=C++]
+#include <map>
+#include <vector>
+
+std::vector<int> numbers{1, 2, 3};
+for (int number : numbers) {
+    std::cout << number << "\n";
+}
+
+std::map<std::string, int> scores{{"Ada", 97}};
+\end{code}
+
+The syntax is more explicit than Python's, but the ideas are the same: values, variables, collections, loops, functions, and objects.
+
+\section{Memory as a model}
+
+A variable may live in automatic storage, dynamic storage, or inside another object. Bugs such as use-after-free, buffer overflow, and data races arise when the program's assumptions about lifetime or access are wrong. These details are why systems programming deserves dedicated study.
+
+\chapter{Java and the JVM}
+
+\section{Classes and a main method}
+
+\begin{code}[language=Java]
+public class Hello {
+    public static void main(String[] args) {
+        String name = "Ada";
+        System.out.println("Hello, " + name + "!");
+    }
+}
+\end{code}
+
+Java source is compiled to bytecode and executed by the Java Virtual Machine. The JVM provides portability, garbage collection, a large standard library, and mature tooling.
+
+\section{Types and collections}
+
+\begin{code}[language=Java]
+import java.util.List;
+
+List<Integer> numbers = List.of(1, 2, 3);
+for (int number : numbers) {
+    System.out.println(number * number);
+}
+\end{code}
+
+Primitive types such as \inlinecode{int} differ from reference types such as \inlinecode{String}. Generic types describe what a collection contains. Java's syntax is verbose, but its explicitness can make large codebases easier to analyse.
+
+\section{Exceptions and interfaces}
+
+\begin{code}[language=Java]
+interface Sender {
+    void send(String message);
+}
+
+class ConsoleSender implements Sender {
+    public void send(String message) {
+        System.out.println(message);
+    }
+}
+\end{code}
+
+An interface describes a contract. A class implements the contract. This is the same dependency-inversion idea seen in the Python composition example.
+
+\part{Beyond syntax}
+
+\chapter{Programming paradigms and architecture}
+
+\section{Imperative and declarative code}
+
+Imperative code describes steps: set a variable, loop, call a function. Declarative code describes a desired result: a SQL query, an HTML document, or a CSS layout. Most real systems mix both styles.
+
+\section{Procedural programming}
+
+Procedural code organises a task into functions and sequences. It is often the best starting point because the control flow is visible.
+
+\section{Object-oriented programming}
+
+Object-oriented code organises behaviour around objects and their relationships. The useful parts are encapsulation, polymorphism, and boundaries. Inheritance is only one mechanism and is often less important than composition.
+
+\section{Functional programming}
+
+Functional programming treats functions as values and prefers transformations that do not mutate shared state.
+
+\begin{code}[language=Python]
+numbers = [1, 2, 3, 4]
+result = list(map(lambda n: n * 2, numbers))
+\end{code}
+
+Pure functions are easier to test because the output depends only on the input. Immutability reduces the number of places that can unexpectedly change state.
+
+\section{Architecture as boundaries}
+
+Architecture is the arrangement of responsibilities and dependencies. A useful design question is: if this requirement changes, how many unrelated files must change? Good boundaries reduce that number.
+
+Common styles include layered architecture, hexagonal architecture, event-driven systems, client-server applications, and pipelines. Treat these as tools, not identities.
+
+\chapter{Concurrency, parallelism, and processes}
+
+\section{Concurrency is not the same as parallelism}
+
+\term{Concurrency} means managing multiple tasks whose progress overlaps. \term{Parallelism} means doing multiple computations at the same time, usually on different CPU cores. A program can be concurrent without being parallel.
+
+\section{Processes and threads}
+
+A process has its own address space and resources. Threads share memory inside a process. Shared memory is fast, but it introduces races: the result can depend on timing.
+
+\begin{code}[language=Python]
+from concurrent.futures import ThreadPoolExecutor
+
+def square(number):
+    return number * number
+
+with ThreadPoolExecutor(max_workers=4) as pool:
+    results = list(pool.map(square, range(6)))
+print(results)
+\end{code}
+
+Use threads mainly for I/O-bound work in Python. Use processes or native extensions for CPU-heavy work, remembering that process communication has a cost.
+
+\section{Shared state and locks}
+
+If two workers can read and write the same state, protect the critical section with a lock or use a design that avoids shared mutation.
+
+\begin{code}[language=Python]
+from threading import Lock
+
+balance = 0
+lock = Lock()
+
+def deposit(amount):
+    global balance
+    with lock:
+        balance += amount
+\end{code}
+
+Locks prevent certain races but can create deadlocks if acquired in inconsistent orders. Prefer simple ownership and message passing when possible.
+
+\chapter{Security and defensive programming}
+
+\section{Threat modelling}
+
+Security starts with asking what needs protection, who might attack it, what capabilities they have, and what the impact would be. A login page is not a complete security model.
+
+\section{The boundary rule}
+
+Treat data from browsers, files, APIs, cookies, headers, environment variables, and databases as untrusted until validated. Encode output for its destination. SQL needs parameters. HTML needs escaping or a safe templating system. Shell commands need safe argument APIs.
+
+\section{Secrets}
+
+Do not commit passwords, API keys, private certificates, or tokens. Store secrets in a secret manager or environment configuration, rotate them when exposed, and give each service the minimum permissions it needs.
+
+\section{Common failures}
+
+\begin{tabularx}{\textwidth}{>{\sffamily\bfseries\color{teal}}p{0.33\textwidth} X}
+\toprule
+Failure & Better habit \\
+\midrule
+SQL injection & Parameterized queries \\
+Cross-site scripting & Context-aware output escaping \\
+Broken access control & Authorize every protected operation on the server \\
+Leaked secrets & Environment or secret-manager configuration \\
+Insecure file upload & Validate type, size, name, and storage location \\
+Weak authentication & Use a mature identity system and secure password hashing \\
+\bottomrule
+\end{tabularx}
+
+Security is a property of the whole system, not a single "security function."
+
+\chapter{Performance, deployment, and cloud systems}
+
+\section{Measure before optimising}
+
+Performance work begins with a user-visible goal: response time, throughput, memory use, startup time, or cost. Profile the real bottleneck. Faster code in the wrong place changes nothing.
+
+\section{Caching}
+
+A cache stores a result so the next request can avoid expensive work. Every cache needs an invalidation strategy, a freshness rule, and a fallback for misses. A cache can reduce load while also making correctness harder.
+
+\section{Build and deployment}
+
+A deployment pipeline commonly:
+
+\begin{enumerate}
+  \item checks formatting and types;
+  \item runs unit and integration tests;
+  \item builds a versioned artifact or container;
+  \item deploys to a staging environment;
+  \item runs smoke tests;
+  \item releases gradually and monitors the result.
+\end{enumerate}
+
+\section{Containers}
+
+A container packages an application and its dependencies in a reproducible image. It still shares the host kernel and is not a complete security boundary by itself.
+
+\begin{code}[language=bash]
+docker build -t my-app .
+docker run --rm -p 8000:8000 my-app
+\end{code}
+
+\section{Observability}
+
+Logs describe events. Metrics describe quantities over time. Traces connect work across services. Good observability answers: what failed, for whom, when, how often, and what changed?
+
+\chapter{Data science and machine learning syntax}
+
+\section{Arrays and tables}
+
+Numerical work often uses arrays rather than ordinary Python lists. A dataframe represents labelled rows and columns.
+
+\begin{code}[language=Python]
+import numpy as np
+import pandas as pd
+
+values = np.array([1, 2, 3, 4])
+scaled = values * 10
+
+frame = pd.DataFrame({
+    "name": ["Ada", "Grace"],
+    "score": [97, 95],
+})
+print(frame[frame["score"] > 95])
+\end{code}
+
+The expression \inlinecode{values * 10} applies the operation element by element. This is called vectorisation and is usually faster and clearer than a Python loop for numerical arrays.
+
+\section{A minimal learning loop}
+
+\begin{code}[language=Python]
+for epoch in range(100):
+    prediction = model(x)
+    loss = loss_function(prediction, y)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+\end{code}
+
+The model makes a prediction, compares it with a target, computes a loss, calculates gradients, and updates parameters. The syntax changes between libraries; the loop's structure is widely shared.
+
+\section{Data leakage and evaluation}
+
+Split data into training and evaluation sets before tuning decisions. Do not let information from the evaluation set influence the training process. Report the metric that matches the real decision, not only the metric that looks impressive.
+
+\chapter{How computers and networks work}
+
+\section{Bits, bytes, and memory}
+
+A bit is 0 or 1. Eight bits make a byte. Text, images, numbers, and programs are all encoded as bytes. The same bytes can represent different values depending on the encoding and interpretation.
+
+The CPU executes instructions using registers and caches. RAM stores working data. Persistent storage keeps data after power is removed. The operating system manages processes, files, devices, and permissions.
+
+\section{Call stacks and heaps}
+
+The call stack tracks active function calls and local variables. The heap stores dynamically allocated objects. A stack frame disappears when a function returns; heap objects live until a memory manager or explicit code releases them.
+
+\section{Networks}
+
+An IP address identifies a network endpoint. DNS maps names to addresses. TCP provides an ordered reliable byte stream. TLS encrypts and authenticates a connection. HTTP defines a common application-level request-response format.
+
+The layers are abstractions. A browser can issue an HTTP request without exposing every packet, checksum, route, or radio signal to the programmer. When debugging, move down a layer only when the current layer cannot explain the problem.
+
+\section{The request path}
+
+When a browser loads a page, a simplified path is:
+
+\begin{enumerate}
+  \item resolve the domain through DNS;
+  \item establish a network connection and, for HTTPS, a secure session;
+  \item send an HTTP request;
+  \item route the request through a server and application;
+  \item read data, perhaps from a database or cache;
+  \item return bytes that the browser parses into a document and pixels.
+\end{enumerate}
+
+This path explains why a page can be slow even when a small function is fast: waiting, distance, queueing, database work, rendering, and many other components matter.
+
+\chapter{Projects and a path from zero to capable}
+
+\section{The smallest useful projects}
+
+Build projects that force you to use input, state, functions, files, errors, and tests. Good progression:
+
+\begin{enumerate}
+  \item A command-line calculator with validation.
+  \item A text-based guessing game with a score.
+  \item A file-backed to-do list using JSON.
+  \item A web page with a form and client-side JavaScript.
+  \item A small API that stores records in SQLite.
+  \item A dashboard that reads an API and renders a table.
+  \item A project with authentication, tests, deployment, and monitoring.
+\end{enumerate}
+
+\section{A project checklist}
+
+Before writing code, write a one-paragraph description. Define the inputs, outputs, invalid cases, and one example. Then make the smallest vertical slice work end to end. Add one feature at a time.
+
+\begin{exercisebox}
+\tryit Design a to-do application. Write down its data model, three commands, two invalid cases, and one test for each command. Implement the command-line version before adding a web interface.
+\end{exercisebox}
+
+\section{A twelve-week route}
+
+\begin{tabularx}{\textwidth}{>{\sffamily\bfseries\color{teal}}p{0.21\textwidth} X}
+\toprule
+Weeks & Focus \\
+\midrule
+1-2 & Python values, expressions, strings, conditions, loops \\
+3-4 & Collections, functions, files, exceptions, testing \\
+5 & Git, terminal, environments, small CLI project \\
+6-7 & HTML, CSS, JavaScript, browser events \\
+8 & SQL, tables, joins, parameterized queries \\
+9 & HTTP, JSON, APIs, asynchronous code \\
+10 & Backend routes, validation, authentication concepts \\
+11 & Data structures, complexity, algorithms, profiling \\
+12 & Finish, document, test, deploy, and explain one project \\
+\bottomrule
+\end{tabularx}
+
+Do not measure progress by how many tutorials you have watched. Measure it by whether you can make a small change, explain why it works, and debug it when it fails.
+
+\begin{keybox}
+\keyidea You are "good at programming" when you can move from an unclear problem to a tested, understandable solution. Syntax is the alphabet. Problem decomposition is the language.
+\end{keybox}
+
+\appendix
+
+\chapter{Syntax atlas}
+
+This appendix is a compact memory aid. Use it after understanding the ideas in the chapters. A cheat sheet cannot replace practice, but it can reduce the friction of recalling a shape.
+
+\section{Python}
+
+\begin{longtable}{>{\ttfamily}p{0.38\textwidth} p{0.52\textwidth}}
+\toprule
+Shape & Purpose \\
+\midrule
+\endfirsthead
+\toprule
+Shape & Purpose \\
+\midrule
+\endhead
+\inlinecode{x = 3} & assignment \\
+\inlinecode{if condition:} & conditional block \\
+\inlinecode{for item in items:} & iteration \\
+\inlinecode{while condition:} & repeated condition \\
+\inlinecode{def name(arg):} & function definition \\
+\inlinecode{return value} & return from a function \\
+\inlinecode{items.append(x)} & mutate a list \\
+\inlinecode{items[1:4]} & slice a sequence \\
+\inlinecode{key in mapping} & membership test \\
+\inlinecode{try: ... except Error:} & handle an exception \\
+\inlinecode{with open(...) as f:} & managed resource \\
+\inlinecode{class Name:} & define a class \\
+\inlinecode{import package} & import a module \\
+\bottomrule
+\end{longtable}
+
+\section{JavaScript and TypeScript}
+
+\begin{longtable}{>{\ttfamily}p{0.38\textwidth} p{0.52\textwidth}}
+\toprule
+Shape & Purpose \\
+\midrule
+\endfirsthead
+\toprule
+Shape & Purpose \\
+\midrule
+\endhead
+\inlinecode{const x = 3;} & stable binding \\
+\inlinecode{let x = 3;} & reassignable binding \\
+\inlinecode{function f(x) \{ return x; \}} & function \\
+\inlinecode{const f = x => x * 2;} & arrow function \\
+\inlinecode{if (ok) \{ ... \}} & conditional block \\
+\inlinecode{for (const x of xs) \{ ... \}} & iteration \\
+\inlinecode{xs.map(x => x * 2)} & transform an array \\
+\inlinecode{await fetch(url)} & await an async result \\
+\inlinecode{interface User \{ ... \}} & TypeScript shape \\
+\inlinecode{type Result = A | B} & union type \\
+\bottomrule
+\end{longtable}
+
+\section{SQL}
+
+\begin{longtable}{>{\ttfamily}p{0.38\textwidth} p{0.52\textwidth}}
+\toprule
+Shape & Purpose \\
+\midrule
+\endfirsthead
+\toprule
+Shape & Purpose \\
+\midrule
+\endhead
+\inlinecode{SELECT columns FROM table} & read rows \\
+\inlinecode{WHERE condition} & filter rows \\
+\inlinecode{ORDER BY column DESC} & sort results \\
+\inlinecode{INSERT INTO table (...) VALUES (...)} & create a row \\
+\inlinecode{UPDATE table SET ... WHERE ...} & change rows \\
+\inlinecode{DELETE FROM table WHERE ...} & remove rows \\
+\inlinecode{JOIN other ON relation} & combine tables \\
+\inlinecode{GROUP BY column} & aggregate groups \\
+\inlinecode{CREATE TABLE ...} & define a table \\
+\bottomrule
+\end{longtable}
+
+\section{HTML, CSS, and Bash}
+
+\begin{tabularx}{\textwidth}{>{\sffamily\bfseries\color{teal}}p{0.25\textwidth} X}
+\toprule
+Language & Essential shapes \\
+\midrule
+HTML & \inlinecode{<tag attr="value">content</tag>} \\
+CSS & \inlinecode{selector \{ property: value; \}} \\
+Bash & \inlinecode{command | command}, \inlinecode{VAR=value}, \inlinecode{if ...; then ...; fi} \\
+C++ & \inlinecode{type name = value;}, \inlinecode{if (...) \{ ... \}}, \inlinecode{for (type x : xs)} \\
+Java & \inlinecode{class Name \{ ... \}}, \inlinecode{public static void main(...)} \\
+\bottomrule
+\end{tabularx}
+
+\chapter{Glossary}
+
+\begin{description}[style=nextline,leftmargin=2.7cm,labelwidth=2.4cm]
+\item[API] A defined interface through which software components communicate.
+\item[Argument] A value supplied to a function call.
+\item[Array] An ordered, indexable collection, often stored contiguously.
+\item[Assignment] Binding a name or location to a value.
+\item[Boolean] A value with two logical states, true and false.
+\item[Bug] A defect that causes a program to behave incorrectly.
+\item[Class] A description from which objects can be created.
+\item[Compiler] A program that translates source into another executable form.
+\item[Database] A system for storing, querying, and updating structured data.
+\item[Exception] A signal that normal execution cannot continue at the current point.
+\item[Function] A named or anonymous unit of reusable behaviour.
+\item[Hash table] A structure that maps keys to values using a hash function.
+\item[HTTP] A protocol used by web clients and servers.
+\item[Immutable] Not changeable after creation.
+\item[Interpreter] A runtime that executes a program representation.
+\item[Iteration] Repeating a process over items or while a condition holds.
+\item[Library] Reusable code packaged for use by other programs.
+\item[Method] A function associated with an object or class.
+\item[Module] A file or unit of code that can be imported.
+\item[Object] A value that can bundle state and behaviour.
+\item[Parameter] A name in a function definition that receives an argument.
+\item[Parse] Convert source text into a structured representation.
+\item[Process] A running program with its own operating-system resources.
+\item[Recursion] Defining a process in terms of a smaller version of itself.
+\item[Runtime] The environment in which a program executes.
+\item[Scope] The region in which a name can be used.
+\item[Server] A program that provides a service to clients.
+\item[State] The data that describes a system at a particular time.
+\item[Syntax] The formal grammar of a language.
+\item[Type] A category of values and the operations valid for them.
+\item[Variable] A name whose associated value may change.
+\end{description}
+
+\chapter{Selected practice solutions}
+
+The point of an exercise is to attempt it before reading a solution. These examples show one reasonable approach, not the only correct approach.
+
+\section{A number range}
+
+\begin{code}[language=Python]
+def in_range(number):
+    return 10 <= number <= 20
+\end{code}
+
+\section{Word lengths}
+
+\begin{code}[language=Python]
+sentence = "learning code takes repeated practice"
+words = sentence.split()
+long_lengths = [len(word) for word in words if len(word) > 4]
+length_by_word = {word: len(word) for word in words}
+\end{code}
+
+\section{A small command-line to-do model}
+
+\begin{code}[language=Python]
+def add_task(tasks, title):
+    tasks.append({"title": title, "done": False})
+
+def complete_task(tasks, index):
+    tasks[index]["done"] = True
+
+tasks = []
+add_task(tasks, "Learn functions")
+complete_task(tasks, 0)
+print(tasks)
+\end{code}
+
+Extend this model with validation, JSON persistence, a command-line parser, and tests. Each extension is a chance to practise a different layer of the book.
+
+\chapter*{Final checklist}
+\addcontentsline{toc}{chapter}{Final checklist}
+
+Before calling a project finished, ask:
+
+\begin{itemize}
+  \item Can a new person run it from a clean environment?
+  \item Are the main inputs and outputs documented?
+  \item Are invalid cases handled deliberately?
+  \item Are the core behaviours covered by tests?
+  \item Are secrets and personal data protected?
+  \item Can I explain the data model and the most important dependency?
+  \item Have I measured the part I claim is slow?
+  \item Is the code easier to change after my last refactor, or merely shorter?
+\end{itemize}
+
+\begin{center}
+\vspace{12mm}
+{\sffamily\bfseries\Large Keep building. Keep explaining.\par}
+\vspace{4mm}
+{\sffamily\color{teal}\large The fastest route from zero is a small project finished carefully.\par}
+\end{center}
+
+\printindex
+
+\end{document}
